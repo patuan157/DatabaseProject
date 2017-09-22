@@ -1,0 +1,21 @@
+# pycache
+__pycache__/
+
+# Pycharm IDE
+.idea
+
+# .pyc
+*.pyc
+
+# OSX
+.DS_Store
+
+# Vscode
+.vscode/
+
+# Original Data File
+dblp.dtd
+dblp.xml
+
+# Temporary Data File
+*.csv

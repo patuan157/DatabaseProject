@@ -1,0 +1,30 @@
+Processing on counting object in data file
+
+1. Publication, which have either "journal" or "conf" appear in their key - count:  (Use for query)
+journal : {
+            'article': 1692757,
+            'incollection': 17,
+            'inproceedings': 5044
+           }
+
+conf : {
+        'article': 16,
+        'book': 40,
+        'incollection': 537,
+        'inproceedings': 2033891
+        }
+
+2. Publication_type Counting:
+Publication_count : {
+                        'article': 1693342,
+                        'book': 13781,
+                        'data': 0,
+                        'incollection': 45430,
+                        'inproceedings': 2038947,
+                        'masterthesis': 0,
+                        'phdthesis': 61782,
+                        'proceeding': 0,
+                        'www': 1959082
+                    }
+
+********** Time to Run to analyse 1+2 : 218.31645965576172 (s) **************
