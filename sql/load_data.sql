@@ -1,5 +1,5 @@
--- SET @PUB_FILE_DIR='/Users/AnhTuan/Desktop/DatabaseProject/pubFile.csv';
--- SET @FIELD_FILE_DIR='/Users/AnhTuan/Desktop/DatabaseProject/fieldFile.csv';
+-- SET @PUB_FILE_DIR='/Users/AnhTuan/Desktop/DatabaseProject/tmpData/pubFile.csv';
+-- SET @FIELD_FILE_DIR='/Users/AnhTuan/Desktop/DatabaseProject/tmpData/fieldFile.csv';
 
 USE db_project;
 
@@ -23,7 +23,7 @@ CREATE TABLE TempField(
 
 # Load Data Into Temporary Publication Table
 LOAD DATA LOCAL
-  INFILE 'pubFile.csv'
+  INFILE 'tmpData/pubFile.csv'
   INTO TABLE TempPublication
   COLUMNS TERMINATED BY '||'
   LINES TERMINATED BY '\n'
@@ -32,7 +32,7 @@ LOAD DATA LOCAL
 
 # Load Data Into Temporary Field Table
 LOAD DATA LOCAL
-  INFILE 'fieldFile.csv'
+  INFILE 'tmpData/fieldFile.csv'
   INTO TABLE TempField
   COLUMNS TERMINATED BY '||'
   LINES TERMINATED BY '\n'
