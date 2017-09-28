@@ -14,10 +14,10 @@ class DBHandler(ContentHandler):
 
     def startDocument(self):
         # Write Data Field into Temporary Data File
-        with open(os.path.join(BASEDIR, "tmpData", "pubFile.csv"), "w") as f:
+        with open(os.path.join(BASEDIR, "tmpData", "pubFile.csv"), "w+") as f:
             f.write("PubKey||MDate||PubType\n")
 
-        with open(os.path.join(BASEDIR, "tmpData", "fieldFile.csv"), "w") as f:
+        with open(os.path.join(BASEDIR, "tmpData", "fieldFile.csv"), "w+") as f:
             f.write("FieldName||PubKey||Value\n")
 
     def startElement(self, name, attrs):
@@ -69,7 +69,7 @@ start = time.time()
 
 parser = make_parser()
 parser.setContentHandler(DBHandler())
-data_file = os.path.join(BASEDIR, "data", "sample.xml")
+data_file = os.path.join(BASEDIR, "data", "dblp.xml")
 parser.parse(open(data_file))
 
 print("Parsing Time")
