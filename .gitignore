@@ -14,7 +14,6 @@ __pycache__/
 .vscode/
 
 # Original Data File
-dblp.dtd
 dblp.xml
 
 # Temporary Data File

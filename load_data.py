@@ -69,7 +69,7 @@ start = time.time()
 
 parser = make_parser()
 parser.setContentHandler(DBHandler())
-data_file = os.path.join(BASEDIR, "data", "dblp.xml")
+data_file = os.path.join(BASEDIR, "data", "sample.xml")
 parser.parse(open(data_file))
 
 print("Parsing Time")

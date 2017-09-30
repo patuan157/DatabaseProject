@@ -23,7 +23,7 @@ CREATE TABLE TempField(
 
 # Load Data Into Temporary Publication Table
 LOAD DATA LOCAL
-  INFILE 'tmpData/pubFile.csv'
+  INFILE '/Users/mrawesome/Projects/db-principle/DatabaseProject/tmpData/pubFile.csv'
   INTO TABLE TempPublication
   COLUMNS TERMINATED BY '||'
   LINES TERMINATED BY '\n'
@@ -32,7 +32,7 @@ LOAD DATA LOCAL
 
 # Load Data Into Temporary Field Table
 LOAD DATA LOCAL
-  INFILE 'tmpData/fieldFile.csv'
+  INFILE '/Users/mrawesome/Projects/db-principle/DatabaseProject/tmpData/fieldFile.csv'
   INTO TABLE TempField
   COLUMNS TERMINATED BY '||'
   LINES TERMINATED BY '\n'
