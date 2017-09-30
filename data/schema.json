@@ -1,0 +1,29 @@
+{
+  "Author": {
+    "id": "Integer",
+    "name": "String"
+  },
+  "Publication": {
+    "id": "Integer",
+    "publType": "inproceedings|incollection|article", // book, proceedings = collection
+    "title": "String",
+    "year": "Integer"
+  },
+  "Conference": {
+    "id": "Integer",
+    "code": "String",
+    "title": "String",
+    "year": "Integer",
+    "month": "String"
+  },
+  "Link_Conf_Publ": {
+    "id": "Integer",
+    "confId": "Integer",
+    "publId": "Integer"
+  },
+  "Link_Author_Publ": {
+    "id": "Integer",
+    "authorId": "Integer",
+    "publId": "Integer"
+  }
+}
