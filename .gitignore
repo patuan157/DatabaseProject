@@ -2,7 +2,7 @@
 __pycache__/
 
 # Pycharm IDE
-.idea
+.idea/
 
 # .pyc
 *.pyc

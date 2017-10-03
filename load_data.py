@@ -1,6 +1,8 @@
+import time
+import sys
+
 from xml.sax import make_parser
 from xml.sax.handler import ContentHandler
-import time
 from constant import *
 
 
@@ -13,12 +15,16 @@ class DBHandler(ContentHandler):
         pass
 
     def startDocument(self):
+        # Create tmpData folder if not exist
+        if not os.path.exists(os.path.join(BASEDIR, "tmpData")):
+            os.makedirs(os.path.join(BASEDIR, "tmpData"))
+
         # Write Data Field into Temporary Data File
         with open(os.path.join(BASEDIR, "tmpData", "pubFile.csv"), "w+") as f:
-            f.write("PubKey||MDate||PubType\n")
+            f.write("PubKey|MDate|PubType\n")
 
         with open(os.path.join(BASEDIR, "tmpData", "fieldFile.csv"), "w+") as f:
-            f.write("FieldName||PubKey||Value\n")
+            f.write("FieldName|PubKey|Value\n")
 
     def startElement(self, name, attrs):
         if name in PUB_TYPE:         # Publication Tag
@@ -66,10 +72,13 @@ class DBHandler(ContentHandler):
 
 
 start = time.time()
-
+if len(sys.argv) >= 1:
+    fileName = sys.argv[1]
+else:
+    os.exit(0)
 parser = make_parser()
 parser.setContentHandler(DBHandler())
-data_file = os.path.join(BASEDIR, "data", "sample.xml")
+data_file = os.path.join(BASEDIR, "data", fileName)
 parser.parse(open(data_file))
 
 print("Parsing Time")

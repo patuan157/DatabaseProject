@@ -1,20 +1,26 @@
 ## Synopsis
 CZ4031 : Database System Principle - Project 1
-- Process large data file from dblp by SAX parser into MySQL database
+- Process large data file from dblp by SAX parser into PostgreSQL database
 - Process some query with and without the implementation of Indexing
 - Find out how caches effect database performance
 
 ## Installation/Setup
 Requirement:
 - Python 3.6
-- MySQL (local)
+- PosgresSQL (local)
+	+ MacOS : https://gist.github.com/sgnl/609557ebacd3378f3b72
+	+ Window : https://www.labkey.org/Documentation/wiki-page.view?name=installPostgreSQLWindows
 
 ## Running Instruction
-- Setup MySQL database with default user "root" and create database for project name db_project
-- Get the data file into data folder : dblp.xml and dblp.dtd
+- Get the data file into data folder : dblp.xml
+- Open file sql/load_data.sql: Fix 2 absolute dir of the COPY statement to fit your own machine
+- Create new database on Postgresql : createdb db_project1
+- Access database : psql -d db_project1
 - Run : python load_data.xml
-- Access MySQL command line using : mysql -u root -p --local-infile db_project
-- Load Data : source sql/load_data.sql
+- Access Postgresql command line : psql -d db_project1
+- Load Data : \i sql/load_data.sql
+- Check Table : \dt 
+- Quit psql : \q
 
 ## Contributors
 ......
