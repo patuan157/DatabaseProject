@@ -54,7 +54,9 @@ class DBHandler(ContentHandler):
 
         elif name in FIELD_TYPE:
             output = name + FIELD_TERMINATOR + str(self.parent_key) \
-                        + FIELD_TERMINATOR + str(self.content)
+                        + FIELD_TERMINATOR
+            if self.content != None:
+                output = output + str(self.content)
 
             # 3 Attributes we care for Field : FieldName||Pub_Key||Value\n
             with open(os.path.join(BASEDIR, "tmpData", "fieldFile.csv"), "a") as f:
@@ -70,17 +72,17 @@ class DBHandler(ContentHandler):
     def endDocument(self):
         pass
 
+if __name__ == "__main__":
+    start = time.time()
+    if len(sys.argv) >= 1:
+        fileName = sys.argv[1]
+    else:
+        os.exit(0)
+    parser = make_parser()
+    parser.setContentHandler(DBHandler())
+    data_file = os.path.join(BASEDIR, "data", fileName)
+    parser.parse(open(data_file))
 
-start = time.time()
-if len(sys.argv) >= 1:
-    fileName = sys.argv[1]
-else:
-    os.exit(0)
-parser = make_parser()
-parser.setContentHandler(DBHandler())
-data_file = os.path.join(BASEDIR, "data", fileName)
-parser.parse(open(data_file))
-
-print("Parsing Time")
-print(time.time() - start)
+    print("Parsing Time")
+    print(time.time() - start)
 
