@@ -15,7 +15,7 @@ Requirement:
 - Get the data file into data folder : dblp.xml
 - Open file sql/load_data.sql: Fix 2 absolute dir of the COPY statement to fit your own machine
 - Create new database on Postgresql : createdb db_project1
-- Run : python load_data.xml
+- Run : python load_data.xml sample.xml (Change to dblp.xml for all data)
 - Access database : psql -d db_project1
 - Access Postgresql command line : psql -d db_project1
 - Load Data : \i sql/load_data.sql
