@@ -13,7 +13,7 @@ class DBHandler(ContentHandler):
         self.pub_count = {}
 
     def startDocument(self):
-        for name in ["article", "inproceedings", "proceeding", "book", "incollection", "phdthesis",
+        for name in ["article", "inproceedings", "proceedings", "book", "incollection", "phdthesis",
                     "masterthesis", "www", "data"]:
             self.pub_count[name] = 0
 

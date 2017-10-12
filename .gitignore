@@ -18,3 +18,7 @@ dblp.xml
 
 # Temporary Data File
 *.csv
+
+# Analysis File
+counting_analysis.py
+Pre-processing.txt

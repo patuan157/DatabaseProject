@@ -18,7 +18,10 @@ Requirement:
 - Run : python load_data.xml sample.xml (Change to dblp.xml for all data)
 - Access database : psql -d db_project1
 - Access Postgresql command line : psql -d db_project1
-- Load Data : \i sql/load_data.sql
+- Load Temporary Data : \i sql/load_tmp_data.sql
+- Table Creation : \i sql/create_table.sql
+- Trigger : \i sql/trigger.sql
+- Load Real Data : \i sql/load_data.sql
 - Check Table : \dt 
 - Quit psql : \q
 

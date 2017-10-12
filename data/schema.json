@@ -1,42 +1,51 @@
 {
-  "Author": {
-    "id": "Integer",
-    "family_name": "String",
-    "given_name": "String"
+  "author": {
+    "authid": "int",
+    "name": "text",
   },
-  "Authored": {
-    "id": "Integer",
-    "authorid": "Integer",
-    "publicationid": "Integer"
+  "authored": {
+    "authid": "int REFERENCES author(authid)",
+    "authname": "text",
+    "pubkey": "varchar(100) REFERENCES publication(pubkey)",
   },
-  "Publication": {
-    "id": "Integer",
-    "key": "String",
-    "publType": "inproceedings|incollection|article", // book, proceedings = collection
-    "title": "String",
-    "year": "Integer",
-    "noAuthors": "Integer",
+  "publication": {
+    "pubkey": "varchar(100)",
+    "pubtype": "varchar(20)", // article or inproceedings
+    "title": "text",
+    "mdate": "date",
+    "year": "int",
+    "numberauthor": "int default 0",
   },
-  "Article": {
+  "article": {
+    "akey": "varchar(100) REFERENCES publication(pubkey)",
+    "mdate": "date",
+    "year": "int",
+    "numberauthor": "int defaut 0",
+    "title": "text",
     "journal_code": "String"
   },
-  "Inproceeding": {
-    "conf_code": "String",
-    "decade" : "String",
+  "inproceedings": {
+    "ikey": "varchar(100) REFERENCES publication(pubkey)",
+    "mdate": "date",
+    "year": "int",
+    "numberauthor": "int DEFAULT 0",
+    "title": "text",
+    "conf_code": "varchar(100)",
+    "decade": "varchar(4)"
   },
-  "Conference": {       // Extract Data as it is Proceeding
-    "id": "Integer",
-    "code": "String",
-    "title": "String",
-    "publisher": "String",
-    "year": "Integer",
-    "month": "String",
+  "conference": {       // Extract Data as it is Proceeding
+    "conferenceid": "int",
+    "conf_code": "varchar(100)",
+    "publisher": "text",
+    "title": "text",
+    "year": "int",
+    "month": "int",
   },
-  "Journal": {          // Only Article Appear
-    "id": "Integer",
-    "code": "String",
-    "title": "String",
-    "year": "Integer",
-    "month": "String",
+  "journal": {          // Only Article Appear
+    "journalid": "int",
+    "journal_code": "varchar(100)",
+    "title": "text",
+    "year": "int",
+    "month": "int",
   }
 }
