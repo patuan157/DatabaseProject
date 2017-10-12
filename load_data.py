@@ -1,5 +1,6 @@
 import time
 import sys
+import codecs
 
 from xml.sax import make_parser
 from xml.sax.handler import ContentHandler
@@ -20,10 +21,10 @@ class DBHandler(ContentHandler):
             os.makedirs(os.path.join(BASEDIR, "tmpData"))
 
         # Write Data Field into Temporary Data File
-        with open(os.path.join(BASEDIR, "tmpData", "pubFile.csv"), "w+") as f:
+        with codecs.open(os.path.join(BASEDIR, "tmpData", "pubFile.csv"), "w+", encoding="utf8") as f:
             f.write("PubKey|MDate|PubType\n")
 
-        with open(os.path.join(BASEDIR, "tmpData", "fieldFile.csv"), "w+") as f:
+        with codecs.open(os.path.join(BASEDIR, "tmpData", "fieldFile.csv"), "w+", encoding="utf8") as f:
             f.write("FieldName|PubKey|Value\n")
 
     def startElement(self, name, attrs):
@@ -48,8 +49,8 @@ class DBHandler(ContentHandler):
 
             output += name                     # The Publication Type at the end of the records
 
-            # 3 Attributes we care for Publication : Pub_Key||Mdate||Pub_type\n. Other is not-necessary
-            with open(os.path.join(BASEDIR, "tmpData", "pubFile.csv"), "a") as f:
+            # 3 Attributes we care for Publication : Pub_Key|Mdate|Pub_type\n. Other is not-necessary
+            with codecs.open(os.path.join(BASEDIR, "tmpData", "pubFile.csv"), "a", encoding="utf8") as f:
                 f.write(output + "\n")
 
         elif name in FIELD_TYPE:
@@ -58,12 +59,14 @@ class DBHandler(ContentHandler):
             if self.content != None:
                 output = output + str(self.content)
 
-            # 3 Attributes we care for Field : FieldName||Pub_Key||Value\n
-            with open(os.path.join(BASEDIR, "tmpData", "fieldFile.csv"), "a") as f:
+            # 3 Attributes we care for Field : FieldName|Pub_Key|Value\n
+            with codecs.open(os.path.join(BASEDIR, "tmpData", "fieldFile.csv"), "a", encoding="utf8") as f:
                 f.write(output + "\n")
 
     def characters(self, content):
         if self.has_char:
+            if FIELD_TERMINATOR in content:
+                content = content.replace(FIELD_TERMINATOR, ' ')
             self.content = content
         else:
             self.content = None
@@ -77,11 +80,14 @@ if __name__ == "__main__":
     if len(sys.argv) >= 1:
         fileName = sys.argv[1]
     else:
+        print("Please provide the data file name to load")
         os.exit(0)
     parser = make_parser()
     parser.setContentHandler(DBHandler())
     data_file = os.path.join(BASEDIR, "data", fileName)
-    parser.parse(open(data_file))
+    with codecs.open(data_file, "r", encoding="utf8") as f:
+        parser.parse(f)
+        #f.read()
 
     print("Parsing Time")
     print(time.time() - start)

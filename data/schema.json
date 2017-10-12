@@ -4,29 +4,39 @@
     "family_name": "String",
     "given_name": "String"
   },
+  "Authored": {
+    "id": "Integer",
+    "authorid": "Integer",
+    "publicationid": "Integer"
+  },
   "Publication": {
     "id": "Integer",
+    "key": "String",
     "publType": "inproceedings|incollection|article", // book, proceedings = collection
     "title": "String",
     "year": "Integer",
     "noAuthors": "Integer",
-    "decade": "String" // e.g. 1980-1989
   },
-  "Conference": {
+  "Article": {
+    "journal_code": "String"
+  },
+  "Inproceeding": {
+    "conf_code": "String",
+    "decade" : "String",
+  },
+  "Conference": {       // Extract Data as it is Proceeding
+    "id": "Integer",
+    "code": "String",
+    "title": "String",
+    "publisher": "String",
+    "year": "Integer",
+    "month": "String",
+  },
+  "Journal": {          // Only Article Appear
     "id": "Integer",
     "code": "String",
     "title": "String",
     "year": "Integer",
-    "month": "String" // e.g. Jun
-  },
-  "Link_Conf_Publ": {
-    "id": "Integer",
-    "confId": "Integer",
-    "publId": "Integer"
-  },
-  "Link_Author_Publ": {
-    "id": "Integer",
-    "authorId": "Integer",
-    "publId": "Integer"
+    "month": "String",
   }
 }
