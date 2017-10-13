@@ -8,65 +8,55 @@ DROP TABLE IF EXISTS publication;
 
 -- Create Table publication --
 CREATE TABLE publication(
-  pubkey varchar(100) NOT NULL UNIQUE,
-  pubtype varchar(20) NOT NULL,
-  mdate date,  
-  year int,
-  numberauthor int DEFAULT 0,
-  title text
+  id text PRIMARY KEY,
+  title text NOT NULL,
+  mdate date NOT NULL,  
+  year int NOT NULL,
+  no_authors int NOT NULL,
+  decade varchar(9) NOT NULL
 );
 
 -- Create Table author --
 CREATE TABLE author(
-  authid SERIAL PRIMARY KEY,
-  name text,
-  pubkey varchar(100)
+  id text PRIMARY KEY,
+  family_name text,
+  give_name text NOT NULL
 );
 
 -- Create Table authored --
-CREATE TABLE authored(
-  authid int REFERENCES author(authid),
-  authname text,
-  pubkey varchar(100) REFERENCES publication(pubkey)
+CREATE TABLE link_publ_auth(
+  id SERIAL PRIMARY KEY,
+  auth_id text REFERENCES author(id),
+  publ_id text REFERENCES publication(id)
 );
 
 -- Create Table article --
 CREATE TABLE article(
-  akey varchar(100) REFERENCES publication(pubkey) PRIMARY KEY,
-  mdate date,
-  year int,
-  numberauthor int DEFAULT 0,
-  title text,
-  journal_code varchar(100)
+  id text REFERENCES publication(id) PRIMARY KEY,
+  journal_id text NOT NULL
 );
 
 -- Create Table inproceedings --
 CREATE TABLE inproceedings(
-  ikey varchar(100) REFERENCES publication(pubkey) PRIMARY KEY,
-  mdate date,
-  year int,
-  numberauthor int DEFAULT 0,
-  title text,
-  conf_code varchar(100),
-  decade varchar(4)
+  id text REFERENCES publication(id) PRIMARY KEY,
+  conf_id text NOT NULL
 );
 
 -- Create Table conference --
 CREATE TABLE conference(
-  conferenceid SERIAL PRIMARY KEY,
-  conf_code varchar(100),
-  publisher text,
-  title text,
-  year int,
-  month int
+  id SERIAL PRIMARY KEY,
+  code varchar(100) NOT NULL,
+  title text NOT NULL,
+  year int NOT NULL,
+  month int NOT NULL
 );
 
 -- Create Table journal --
 CREATE TABLE journal(
-  journalid SERIAL PRIMARY KEY,
-  journal_code varchar(100),
-  title text,
-  year int,
-  month int
+  id SERIAL PRIMARY KEY,
+  code varchar(100),
+  title text NOT NULL,
+  year int NOT NULL,
+  month int NOT NULL
 );
 

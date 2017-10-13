@@ -18,11 +18,11 @@
     "decade": "varchar(9) not null"
   },
   "article": {
-    "id": "varchar(100) REFERENCES publication(pubkey)",
+    "id": "text REFERENCES publication(id)",
     "journal_id": "text not null"
   },
   "inproceedings": {
-    "id": "varchar(100) REFERENCES publication(pubkey)",
+    "id": "text REFERENCES publication(id)",
     "conf_id": "text not null"
   },
   "conference": {       // Extract Data as it is Proceeding
