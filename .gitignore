@@ -15,6 +15,7 @@ __pycache__/
 
 # Original Data File
 dblp.xml
+dblp-sample.xml
 
 # Temporary Data File
 *.csv
@@ -22,3 +23,4 @@ dblp.xml
 # Analysis File
 counting_analysis.py
 Pre-processing.txt
+
