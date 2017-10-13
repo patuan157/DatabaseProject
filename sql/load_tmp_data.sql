@@ -20,7 +20,7 @@ DROP TABLE IF EXISTS tempfield;
 CREATE TABLE tempfield(
   fieldid SERIAL PRIMARY KEY,
   fieldname VARCHAR(20) NOT NULL ,
-  pubkey VARCHAR(50) NOT NULL,
+  pubkey text NOT NULL,
   value text
 );
 

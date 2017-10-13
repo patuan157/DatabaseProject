@@ -20,7 +20,7 @@ CREATE TABLE publication(
 CREATE TABLE author(
   id text PRIMARY KEY,
   family_name text,
-  give_name text NOT NULL
+  given_name text NOT NULL
 );
 
 -- Create Table authored --
