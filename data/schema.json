@@ -1,51 +1,42 @@
 {
   "author": {
-    "authid": "int",
-    "name": "text",
+    "id": "text primary key", // full name
+    "family_name": "text",
+    "given_name": "text not null"
   },
-  "authored": {
-    "authid": "int REFERENCES author(authid)",
-    "authname": "text",
-    "pubkey": "varchar(100) REFERENCES publication(pubkey)",
+  "link_publ_auth": {
+    "id": "int serial primary key",
+    "auth_id": "text REFERENCES author(id)",
+    "publ_id": "text REFERENCES publication(id)"
   },
   "publication": {
-    "pubkey": "varchar(100)",
-    "pubtype": "varchar(20)", // article or inproceedings
-    "title": "text",
-    "mdate": "date",
-    "year": "int",
-    "numberauthor": "int default 0",
+    "id": "text primary key",
+    "title": "text not null",
+    "mdate": "date not null",
+    "year": "int not null",
+    "no_authors": "int not null",
+    "decade": "varchar(9) not null"
   },
   "article": {
-    "akey": "varchar(100) REFERENCES publication(pubkey)",
-    "mdate": "date",
-    "year": "int",
-    "numberauthor": "int defaut 0",
-    "title": "text",
-    "journal_code": "String"
+    "id": "varchar(100) REFERENCES publication(pubkey)",
+    "journal_id": "text not null"
   },
   "inproceedings": {
-    "ikey": "varchar(100) REFERENCES publication(pubkey)",
-    "mdate": "date",
-    "year": "int",
-    "numberauthor": "int DEFAULT 0",
-    "title": "text",
-    "conf_code": "varchar(100)",
-    "decade": "varchar(4)"
+    "id": "varchar(100) REFERENCES publication(pubkey)",
+    "conf_id": "text not null"
   },
   "conference": {       // Extract Data as it is Proceeding
-    "conferenceid": "int",
-    "conf_code": "varchar(100)",
-    "publisher": "text",
-    "title": "text",
-    "year": "int",
-    "month": "int",
+    "id": "int serial primary key",
+    "code": "varchar(100) not null",
+    "title": "text not null",
+    "year": "int not null",
+    "month": "int not null"
   },
   "journal": {          // Only Article Appear
-    "journalid": "int",
-    "journal_code": "varchar(100)",
-    "title": "text",
-    "year": "int",
-    "month": "int",
+    "id": "int serial primary key",
+    "code": "varchar(100) not null",
+    "title": "text not null",
+    "year": "int not null",
+    "month": "int not null"
   }
 }
