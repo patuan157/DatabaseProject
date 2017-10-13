@@ -12,8 +12,7 @@ from constant import *
 
 class DBHandler(ContentHandler):
     def __init__(self):
-        self.content = '' 
-        self.count_pub = 0
+        self.content = ''
         self.att = None
         self.parent_key = None
         self.parent_title = ''
@@ -27,41 +26,43 @@ class DBHandler(ContentHandler):
 
         # Write Data Field into Temporary Data File
         with codecs.open(os.path.join(BASEDIR, "tmpData", "pubFile.csv"), "w+", encoding="utf-8") as f:
-            f.write("PubKey|MDate|PubType\n")
+            f.write("PubID|Title|Month|Year|Decade||PubType|Code|NoAuthors\n")
 
         with codecs.open(os.path.join(BASEDIR, "tmpData", "fieldFile.csv"), "w+", encoding="utf-8") as f:
-            f.write("FieldName|PubKey|Value\n")
+            f.write("FieldName|PubID|Value\n")
 
     def startElement(self, name, attrs):
-        if name in PUB_TYPE:         # Publication Tag
+        if name in PUB_TYPE:        # Publication Tag
             self.att = attrs
             self.parent_key = self.att.get("key")
             self.parent_noAuthors = 0
-            self.parent_title = ''
-            self.count_pub += 1
-        elif name in FIELD_TYPE:  # Field Tag : title, author, pages, year, journal
+            self.parent_title = ""
+        elif name in FIELD_TYPE:    # Field Tag : title, author, pages, year, journal
             self.content = ''
 
     def endElement(self, name):
-        if name in PUB_TYPE:         # Publication Tag
+        if name in PUB_TYPE:         # Publication Tag. Write out to pubFile.csv
             output = ""
-            if "key" in self.att.keys():            # Every Publication Should have a Key
-                output += str(self.att.get("key")) + FIELD_TERMINATOR
-            output += str(self.parent_title) + FIELD_TERMINATOR
+            if "key" in self.att.keys():
+                output += str(self.att.get("key")) + FIELD_TERMINATOR   # Append PubID
+            output += str(self.parent_title) + FIELD_TERMINATOR         # Append Title
 
             if "mdate" in self.att.keys():
                 mdate = str(self.att.get('mdate'))
                 dt = datetime.strptime(mdate, '%Y-%m-%d')
                 year = dt.year
+                month = dt.month
                 decade = get_decade(year)
-                output += str(year) + FIELD_TERMINATOR
-                output += decade + FIELD_TERMINATOR
+                output += str(month) + FIELD_TERMINATOR                 # Append Month
+                output += str(year) + FIELD_TERMINATOR                  # Append Year
+                output += decade + FIELD_TERMINATOR                     # Append Decade
 
-            output += str(self.att.get('key').split('/')[1]) + FIELD_TERMINATOR
+            output += name + FIELD_TERMINATOR                           # Append PubType
 
-            output += str(self.parent_noAuthors)
+            output += str(self.att.get('key').split('/')[1]) + FIELD_TERMINATOR     # Append Code
 
-            # 3 Attributes we care for Publication : Pub_Key|Mdate|Pub_type\n. Other is not-necessary
+            output += str(self.parent_noAuthors)                        # Append NoAuthors
+
             with codecs.open(os.path.join(BASEDIR, "tmpData", "pubFile.csv"), "a", encoding="utf-8") as f:
                 f.write(output + "\n")
 
@@ -88,7 +89,7 @@ class DBHandler(ContentHandler):
     def characters(self, content):
         if FIELD_TERMINATOR in content:
             content = content.replace(FIELD_TERMINATOR, ' ')
-        self.content += html.unescape(content)
+        self.content += html.unescape(content).strip()                 # Handle HTML entity special character
 
     def endDocument(self):
         pass
@@ -110,7 +111,6 @@ if __name__ == "__main__":
     data_file = os.path.join(BASEDIR, "data", fileName)
     with codecs.open(data_file, "r", encoding="utf-8") as f:
         parser.parse(f)
-        #f.read()
 
     print("Parsing Time")
     print(time.time() - start)

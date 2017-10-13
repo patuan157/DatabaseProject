@@ -12,7 +12,7 @@
   "publication": {
     "id": "text primary key",
     "title": "text not null",
-    "mdate": "date not null",
+    "month": "date not null",
     "year": "int not null",
     "no_authors": "int not null",
     "decade": "varchar(9) not null"

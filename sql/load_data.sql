@@ -1,13 +1,8 @@
--- Insert data into publication. Set 0 as number of author for now
-INSERT INTO publication(pubkey, pubtype, mdate, year, title) (
+-- Insert data into publication. (From temppublication)
+INSERT INTO publication(id, title, month, year, no_authors, decade) (
   SELECT DISTINCT
-    tp.pubkey,
-    tp.pubtype,
-    tp.mdate,
-    EXTRACT(YEAR FROM tp.mdate),
-    tf1.value
-  FROM temppublication as tp, tempfield as tf1
-  WHERE tp.pubkey = tf1.pubkey AND tf1.fieldname = 'title'
+    tp.id, tp.title, tp.month, tp.year, tp.no_authors, tp.decade
+  FROM temppublication as tp
 );
 
 -- Insert data into author.

@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS authored;    -- Drop first because of the REFERENCE KEY
+DROP TABLE IF EXISTS link_publ_auth;    -- Drop first because of the REFERENCE KEY
 DROP TABLE IF EXISTS article;
 DROP TABLE IF EXISTS inproceedings;
 DROP TABLE IF EXISTS author;
@@ -10,7 +10,7 @@ DROP TABLE IF EXISTS publication;
 CREATE TABLE publication(
   id text PRIMARY KEY,
   title text NOT NULL,
-  mdate date NOT NULL,  
+  month int NOT NULL,  
   year int NOT NULL,
   no_authors int NOT NULL,
   decade varchar(9) NOT NULL
