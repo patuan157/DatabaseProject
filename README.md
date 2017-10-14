@@ -20,7 +20,6 @@ Requirement:
 - Access Postgresql command line : psql -d db_project1
 - Load Temporary Data : \i sql/load_tmp_data.sql
 - Table Creation : \i sql/create_table.sql
-- Trigger : \i sql/trigger.sql
 - Load Real Data : \i sql/load_data.sql
 - Check Table : \dt 
 - Quit psql : \q
