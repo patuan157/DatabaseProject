@@ -54,7 +54,7 @@ INSERT INTO article(id, journal_id) (
     p.id,
     j.id
   FROM publication as p, journal as j
-  WHERE j.code = p.code AND j.month = p.month AND j.year = p.year
+  WHERE j.code = split_part(p.id, '/', 2) AND j.month = p.month AND j.year = p.year
 );
 
 -- Insert data into inproceedings
