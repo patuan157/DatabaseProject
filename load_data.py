@@ -108,7 +108,7 @@ if __name__ == "__main__":
         os.exit(0)
     parser = make_parser()
     parser.setContentHandler(DBHandler())
-    data_file = os.path.join(BASEDIR, "data", fileName)
+    data_file = os.path.join(BASEDIR, fileName)
     with codecs.open(data_file, "r", encoding="utf-8") as f:
         parser.parse(f)
 

@@ -38,7 +38,7 @@ INSERT INTO journal(code, title, year, month) (
 );
 
 -- Insert data into conference
-INSERT INTO conference(code, title, year, month) (
+INSERT INTO conference(code, key, year, month) (
   SELECT DISTINCT
     split_part(tp.id, '/', 2),
     tf.value,
@@ -66,4 +66,8 @@ INSERT INTO inproceedings(id, conf_id) (
   WHERE c.code = split_part(p.id, '/', 2) AND c.month = p.month AND c.year = p.year
 );
 
-
+-- Update title for conference
+UPDATE conference
+SET title = tp.title
+FROM temppublication as tp
+WHERE conference.key = tp.id AND tp.pubtype='proceedings';

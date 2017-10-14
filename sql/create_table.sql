@@ -34,22 +34,23 @@ CREATE TABLE link_publ_auth(
 -- Create Table article --
 CREATE TABLE article(
   id text REFERENCES publication(id) PRIMARY KEY,
-  journal_id text NOT NULL
+  journal_id int NOT NULL
 );
 
 -- Create Table inproceedings --
 CREATE TABLE inproceedings(
   id text REFERENCES publication(id) PRIMARY KEY,
-  conf_id text NOT NULL
+  conf_id int NOT NULL
 );
 
 -- Create Table conference --
 CREATE TABLE conference(
   id SERIAL PRIMARY KEY,
   code varchar(100) NOT NULL,
-  title text NOT NULL,
+  key text NOT NULL,
   year int NOT NULL,
-  month int NOT NULL
+  month int NOT NULL,
+  title text
 );
 
 -- Create Table journal --

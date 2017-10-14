@@ -1,150 +1,145 @@
 -- #1
-select publType, count(publType) as count
+select pub_type, count(id) as count
 from publication
 where year between 2000 and 2017
-group by publType;
+group by pub_type;
 
 -- #2
-select distinct conference.title
+select distinct title, month, year
 from conference
-where month = 'Jul' and id in (
+where month = 7 and id in (
   select c.id
-  from publication p natural join conference c natural join link_conf_publ l
+  from conference c, inproceedings i
+  where i.conf_id = c.id
   group by c.id
-  having count(c.id) > 200;
+  having count(c.id) > 200
 );
 
 -- #3
 -- a.
-select p.id, p.publType, p.title, p.year
-from publication p natural join author a natural join link_author_publ l
-where p.year = 2015 and author = 'X';
+select p.id, p.title, p.month, p.year
+from publication p, author a, link_publ_auth lpa
+where p.id = lpa.publ_id and a.id = lpa.auth_id and p.year = 2015 and a.id = 'X';
 
 -- b.
-select p.id, p.publType, p.title, p.year
-from publication p natural join conference c natural join link_author_publ l
-where p.id in (
-  select p.id
-  from publication p natural join author a natural join link_author_publ l
-  where author = 'X';
-) and c.year = Y and c.code = 'Z'; -- not sure short code or full title, for now assume that it's short code
--- also publication year or proceedings year, for now assume that it's proceedings year
+select p.id, p.title, p.month, p.year
+from publication p, author a, link_publ_auth lpa
+where p.id = lpa.publ_id and a.id = lpa.auth_id and split_part(p.id, '/', 2) = 'Z' and p.year = Y and a.id = 'X';
 
 -- c.
-select a.given_name || a.family_name as name
-from author a natural join publication p natural join link_author_publ l
-where p.id in (
-  select p.id
-  from publication p natural join conference c natural join link_conf_publ l
-  where c.code = 'Z' and c.year = Y; -- assume that the conference name is short code and year is conference year
-)
-group by a.given_name || a.family_name as name
+select a.id
+from publication p, author a, link_publ_auth lpa
+where p.id = lpa.publ_id and a.id = lpa.auth_id and split_part(p.id, '/', 2) = 'Z' and p.year = Y
+group by a.id
 having count(a.id) >= 2;
 
 -- #4 (book and article currently not counted)
 -- a.
-select *
-from (
-  select a.given_name || a.family_name as name
-  from publication p natural join author a natural join link_author_publ l
-  where p.id in (
-    select p.id
-    from publication p natural join conference c natural join link_conf_publ l
-    where c.code = 'pvldb'
-  )
-  group by a.given_name || a.family_name as name
-  having count(a.id) >= 10
-) union (
-  select a.given_name || a.family_name as name
-  from publication p natural join author a natural join link_author_publ l
-  where p.id in (
-    select p.id
-    from publication p natural join conference c natural join link_conf_publ l
-    where c.code = 'sigmod'
-  )
-  group by a.given_name || a.family_name as name
-  having count(a.id) >= 10
-);
+select a.id
+from publication p, author a, link_publ_auth lpa 
+where p.id = lpa.publ_id and a.id = lpa.auth_id and split_part(p.id, '/', 2) = 'pvldb'
+group by a.id
+having count(a.id) >= 10
+intersect 
+select a.id
+from publication p, author a, link_publ_auth lpa 
+where p.id = lpa.publ_id and a.id = lpa.auth_id and split_part(p.id, '/', 2) = 'sigmod'
+group by a.id
+having count(a.id) >= 10
 
 -- #4
 -- b.
-select *
-from (
-  select a.given_name || a.family_name as name
-  from publication p natural join author a natural join link_author_publ l
-  where p.id in (
-    select p.id
-    from publication p natural join conference c natural join link_conf_publ l
-    where c.code = 'pvldb'
-  )
-  group by a.given_name || a.family_name as name
-  having count(a.id) >= 15
-) union (
-  select a.given_name || a.family_name as name
-  from publication p natural join author a natural join link_author_publ l
-  where p.id in (
-    select p.id
-    from publication p natural join conference c natural join link_conf_publ l
-    where c.code = 'kdd'
-  )
-  group by a.given_name || a.family_name as name
-  having count(a.id) = 0
-);
+select a.id
+from publication p, author a, link_publ_auth lpa 
+where p.id = lpa.publ_id and a.id = lpa.auth_id and split_part(p.id, '/', 2) = 'pvldb'
+group by a.id
+having count(a.id) >= 15
+except
+select a.id
+from publication p, author a, link_publ_auth lpa 
+where p.id = lpa.publ_id and a.id = lpa.auth_id and split_part(p.id, '/', 2) = 'kdd'
+group by a.id
 
 -- #5
-select p.decade, count(*)
-from publication p natural join conference c natural join link_conf_publ l
-where c.code = 'dblp'
-group by p.decade
-order by p.decade;
+select decade, count(id)
+from publication p
+group by decade
+order by decade;
 
 -- #6
-select a.given_name || a.family_name as name
-from publication p natural join author a natural join link_author_publ l
-where p.id in (
-  select p.id
-  from publication p natural join conference c natural join link_conf_publ l
-  where c.title like '%data%' and p.noAuthors = MAX(p.noAuthors)
-);
+create view data_max as
+select p.id, p.no_authors
+from publication p, conference c
+where split_part(p.id, '/', 2) = split_part(c.key, '/', 2) and p.month = c.month and p.year = c.year and lower(c.title) like '%data%'
+union
+select p.id, p.no_authors
+from publication p, journal j
+where split_part(p.id, '/', 2) = j.code and p.month = j.month and p.year = j.year and lower(j.title) like '%data%';
+select a.id
+from author a, link_publ_auth lpa 
+where lpa.publ_id = (
+  select id
+  from data_max
+  where no_authors = (
+    select max(no_authors)
+    from data_max
+  )
+) and a.id = lpa.auth_id;
 
 -- #7
-select a.given_name || a.family_name as name
-from publication p natural join author a natural join link_author_publ l
+select a.id
+from publication p, author a, link_publ_auth lpa
 where p.id in (
   select p.id
-  from publication p natural join conference c natural join link_conf_publ l
-  where c.title like '%data%' and date_part('year', CURRENT_DATE) - p.year <= 5
+  from publication p, conference c
+  where split_part(p.id, '/', 2) = split_part(c.key, '/', 2) and p.month = c.month and p.year = c.year and lower(c.title) like '%data%' and date_part('year', CURRENT_DATE) - p.year <= 5
+  union
+  select p.id
+  from publication p, journal j
+  where split_part(p.id, '/', 2) = j.code and p.month = j.month and p.year = j.year and lower(j.title) like '%data%' and date_part('year', CURRENT_DATE) - p.year <= 5
 }
-group by a.given_name || a.family_name as name
+group by a.id
 order by count(a.id) desc
 limit 10;
 
 -- #8
 select distinct c.title
-from publication p natural join conference c natural join link_conf_publ l
-where c.month = 'Jun'
-group by c.title, c.year, c.month
-having count(c.id) >= 100
+from publication p, conference c
+where split_part(p.id, '/', 2) = split_part(c.key, '/', 2) and p.month = 6 and p.year = c.year
+group by c.id
+having count(c.id) >= 100;
 
 -- #9
 -- a.
-select a.given_name || a.family_name as name
+select a.id
 from author a 
-where a.family_name like 'H%' and 31 = (
-  select distinct count(p.year)
-  from publication p1 natural join author a1 natural join link_author_publ l1 
-  where a1.family_name = a.family_name and a1.given_name = a.given_name and date_part('year', CURRENT_DATE) - p.year <= 30
-  group by p.year
+where lower(a.family_name) like 'h%' and 31 = (
+  select count(*)
+  from (
+    select p.year
+    from publication p, author a1, link_publ_auth lpa 
+    where a1.id = lpa.auth_id and p.id = lpa.publ_id and a1.id = a.id and date_part('year', CURRENT_DATE) - p.year <= 30
+    group by p.year
+  ) as tmp
 )
 
 -- #9
 -- b.
-select a.given_name || a.family_name as name, count(*)
-from publication p natural join author a natural join link_author_publ l
-where a.id in (
-  select a.id
-  from publication p1 natural join author a1 natural join link_author_publ l1 
-  where p.year = MIN(p.year)
+select a.id, count(*)
+from publication p, author a, link_publ_auth lpa
+where a.id = lpa.auth_id and p.id = lpa.publ_id and p.year = (
+  select min(year)
+  from publication
 )
+group by a.id;
 
 -- #10
+-- find all authors who have never published any articles (in journal) within
+-- the last 5 years
+select a.id
+from publication p, author a, link_publ_auth lpa
+where p.id = lpa.publ_id and a.id = lpa.auth_id and p.pub_type = 'inproceedings' and date_part('year', CURRENT_DATE) - p.year <= 5
+except
+select a.id
+from publication p, author a, link_publ_auth lpa
+where p.id = lpa.publ_id and a.id = lpa.auth_id and p.pub_type = 'article' and date_part('year', CURRENT_DATE) - p.year <= 5

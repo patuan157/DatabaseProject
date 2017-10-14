@@ -1,4 +1,4 @@
-\set home_dir '/Users/AnhTuan/Desktop'
+\set home_dir '/home/xuanvu_24711'
 \set pubFile :home_dir '/DatabaseProject/tmpData/pubFile.csv' 
 \set fieldFile :home_dir '/DatabaseProject/tmpData/fieldFile.csv' 
 
