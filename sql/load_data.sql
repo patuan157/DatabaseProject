@@ -1,8 +1,9 @@
 -- Insert data into publication. (From temppublication)
-INSERT INTO publication(id, title, month, year, no_authors, decade) (
+INSERT INTO publication(id, title, month, year, no_authors, decade, pub_type) (
   SELECT DISTINCT
-    tp.id, tp.title, tp.month, tp.year, tp.no_authors, tp.decade  
+    tp.id, tp.title, tp.month, tp.year, tp.no_authors, tp.decade, tp.pubtype
   FROM temppublication as tp
+  WHERE tp.pubtype = 'article' OR tp.pubtype = 'inproceedings'
 );
 
 -- Insert data into author. (tempfield)
@@ -50,10 +51,10 @@ INSERT INTO conference(code, title, year, month) (
 -- Insert data into article   // PROBLEM HERE
 INSERT INTO article(id, journal_id) (
   SELECT DISTINCT
-    tp.id,
+    p.id,
     j.id
-  FROM temppublication as tp, journal as j
-  WHERE j.code = tp.code AND j.month = tp.month AND j.year = tp.year
+  FROM publication as p, journal as j
+  WHERE j.code = p.code AND j.month = p.month AND j.year = p.year
 );
 
 -- Insert data into inproceedings

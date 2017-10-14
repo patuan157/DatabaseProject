@@ -14,6 +14,7 @@ CREATE TABLE publication(
   year int NOT NULL,
   no_authors int NOT NULL,
   decade varchar(9) NOT NULL
+  pub_type varchar(20) NOT NULL,
 );
 
 -- Create Table author --
