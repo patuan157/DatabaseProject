@@ -26,10 +26,10 @@ CREATE TABLE tempfield(
 
 COPY temppublication(id, title, month, year, decade, pubtype, code, no_authors)
   FROM :'pubFile' 
-  (FORMAT CSV, DELIMITER('|'), HEADER );
+  (FORMAT CSV, DELIMITER('|'), QUOTE(E'\b'), HEADER );
 
 COPY tempfield(fieldname, pubkey, value) 
   FROM :'fieldFile'
-  (FORMAT CSV, DELIMITER('|'), HEADER );
+  (FORMAT CSV, DELIMITER('|'), QUOTE(E'\b'), HEADER );
 
 
