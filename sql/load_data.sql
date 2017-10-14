@@ -50,10 +50,10 @@ INSERT INTO conference(code, title, year, month) (
 -- Insert data into article   // PROBLEM HERE
 INSERT INTO article(id, journal_id) (
   SELECT DISTINCT
-    p.id,
+    tp.id,
     j.id
-  FROM publication as p, journal as j
-  WHERE j.code = split_part(p.id, '/', 2) AND j.month = p.month AND j.year = p.year
+  FROM temppublication as tp, journal as j
+  WHERE j.code = tp.code AND j.month = tp.month AND j.year = tp.year
 );
 
 -- Insert data into inproceedings

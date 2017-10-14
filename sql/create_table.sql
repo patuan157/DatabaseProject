@@ -54,9 +54,47 @@ CREATE TABLE conference(
 -- Create Table journal --
 CREATE TABLE journal(
   id SERIAL PRIMARY KEY,
-  code varchar(100),
+  code varchar(100) NOT NULL,
   title text NOT NULL,
   year int NOT NULL,
   month int NOT NULL
 );
 
+
+-- TRIGGER AND PROCEDURE SUPPORT THE INSERT DATA --
+CREATE OR REPLACE FUNCTION check_journal_year_month_unique()
+  RETURNS trigger AS
+$$
+BEGIN
+  IF EXISTS( SELECT code, year, month FROM journal as j
+        WHERE j.code = NEW.code AND j.year = NEW.year AND j.month = NEW.month) THEN
+  RETURN NULL;
+  ELSE RETURN NEW;
+  END IF;
+END;
+$$ 
+LANGUAGE 'plpgsql';
+
+
+CREATE OR REPLACE FUNCTION check_conference_year_month_unique()
+  RETURNS trigger AS
+$$
+BEGIN
+  IF EXISTS( SELECT code, year, month FROM conference as c
+        WHERE c.code = NEW.code AND c.year = NEW.year AND c.month = NEW.month) THEN
+  RETURN NULL;
+  ELSE RETURN NEW;
+  END IF;
+END;
+$$
+LANGUAGE 'plpgsql';
+
+CREATE TRIGGER unique_journal 
+  BEFORE INSERT ON journal
+  FOR EACH ROW
+  EXECUTE PROCEDURE check_journal_year_month_unique();
+
+CREATE TRIGGER unique_conference
+  BEFORE INSERT ON conference
+  FOR EACH ROW
+  EXECUTE PROCEDURE check_conference_year_month_unique();
