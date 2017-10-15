@@ -17,7 +17,7 @@ where month = 7 and id in (
 
 -- #3
 -- a.
-select p.id, p.title, p.month, p.year
+select p.id, p.title, p.month, p.year, p.pub_type, p.no_authors p.decade
 from publication p, author a, link_publ_auth lpa
 where p.id = lpa.publ_id and a.id = lpa.auth_id and p.year = 2015 and a.id = 'X';
 
@@ -45,7 +45,7 @@ select a.id
 from publication p, author a, link_publ_auth lpa 
 where p.id = lpa.publ_id and a.id = lpa.auth_id and split_part(p.id, '/', 2) = 'sigmod'
 group by a.id
-having count(a.id) >= 10
+having count(a.id) >= 10;
 
 -- #4
 -- b.
@@ -58,7 +58,7 @@ except
 select a.id
 from publication p, author a, link_publ_auth lpa 
 where p.id = lpa.publ_id and a.id = lpa.auth_id and split_part(p.id, '/', 2) = 'kdd'
-group by a.id
+group by a.id;
 
 -- #5
 select decade, count(id)
@@ -75,8 +75,8 @@ union
 select p.id, p.no_authors
 from publication p, journal j
 where split_part(p.id, '/', 2) = j.code and p.month = j.month and p.year = j.year and lower(j.title) like '%data%';
-select a.id
-from author a, link_publ_auth lpa 
+select a.id, p.id, p.no_authors
+from author a, link_publ_auth lpa, publication p
 where lpa.publ_id = (
   select id
   from data_max
@@ -84,20 +84,20 @@ where lpa.publ_id = (
     select max(no_authors)
     from data_max
   )
-) and a.id = lpa.auth_id;
+) and a.id = lpa.auth_id and lpa.publ_id = p.id;
 
 -- #7
-select a.id
-from publication p, author a, link_publ_auth lpa
-where p.id in (
-  select p.id
-  from publication p, conference c
-  where split_part(p.id, '/', 2) = split_part(c.key, '/', 2) and p.month = c.month and p.year = c.year and lower(c.title) like '%data%' and date_part('year', CURRENT_DATE) - p.year <= 5
-  union
-  select p.id
-  from publication p, journal j
-  where split_part(p.id, '/', 2) = j.code and p.month = j.month and p.year = j.year and lower(j.title) like '%data%' and date_part('year', CURRENT_DATE) - p.year <= 5
-}
+create view data_pub as
+select p.id
+from publication p, conference c
+where split_part(p.id, '/', 2) = split_part(c.key, '/', 2) and p.month = c.month and p.year = c.year and lower(c.title) like '%data%' and date_part('year', CURRENT_DATE) - p.year <= 5
+union
+select p.id
+from publication p, journal j
+where split_part(p.id, '/', 2) = j.code and p.month = j.month and p.year = j.year and lower(j.title) like '%data%' and date_part('year', CURRENT_DATE) - p.year <= 5;
+select a.id, count(a.id)
+from data_pub d, author a, link_publ_auth lpa
+where a.id = lpa.auth_id and d.id = lpa.publ_id
 group by a.id
 order by count(a.id) desc
 limit 10;
@@ -116,21 +116,23 @@ from author a
 where lower(a.family_name) like 'h%' and 31 = (
   select count(*)
   from (
-    select p.year
+    select distinct p.year
     from publication p, author a1, link_publ_auth lpa 
     where a1.id = lpa.auth_id and p.id = lpa.publ_id and a1.id = a.id and date_part('year', CURRENT_DATE) - p.year <= 30
-    group by p.year
   ) as tmp
-)
+);
 
 -- #9
 -- b.
 select a.id, count(*)
-from publication p, author a, link_publ_auth lpa
-where a.id = lpa.auth_id and p.id = lpa.publ_id and p.year = (
-  select min(year)
+from publication p, author a, link_publ_auth lpa, (
+  select year, min(month) as month
   from publication
-)
+  group by year
+  order by year
+  limit 1
+) as tmp
+where a.id = lpa.auth_id and p.id = lpa.publ_id and p.year = tmp.year and p.month = tmp.month
 group by a.id;
 
 -- #10
@@ -142,4 +144,4 @@ where p.id = lpa.publ_id and a.id = lpa.auth_id and p.pub_type = 'inproceedings'
 except
 select a.id
 from publication p, author a, link_publ_auth lpa
-where p.id = lpa.publ_id and a.id = lpa.auth_id and p.pub_type = 'article' and date_part('year', CURRENT_DATE) - p.year <= 5
+where p.id = lpa.publ_id and a.id = lpa.auth_id and p.pub_type = 'article' and date_part('year', CURRENT_DATE) - p.year <= 5;
